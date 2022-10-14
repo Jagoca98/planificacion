@@ -7,6 +7,8 @@ import math
 import threading
 from sys import exit
 
+print('aaa')
+
 FREE = (255, 255, 255)
 OBSTACLE = (255, 179, 15)
 VISITED = (141, 181, 128)
