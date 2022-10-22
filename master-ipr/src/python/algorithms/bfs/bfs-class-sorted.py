@@ -14,6 +14,12 @@ GOAL = (255, 255, 0)
 START = (0, 0, 255)
 PATH = (75, 74, 103)
 
+"""!@brief Creates a new Hello object.
+
+    This Hello Object is being used to...
+
+    @param name The name of the user.
+    """
 class Node:
     def __init__(self, x, y, myId, parentId, distance):
         self.x = x
@@ -34,7 +40,11 @@ class Bfs:
         if (self.MAP < 1 or self.MAP > 11):
             self.MAP = 1
         self.FILE_NAME = "../../../../map"+str(self.MAP)+"/map"+str(self.MAP)+".csv"
+        self.mutex = threading.Lock()  # is equal to threading.Semaphore(1)
+        self.mutex.acquire()
         self.ok = False
+        self.done = False
+        self.mutex.release()
 
         self.charMap = []
         with open(self.FILE_NAME) as self.f:
@@ -61,8 +71,10 @@ class Bfs:
         self.background = pygame.Surface((600, 600))
         self.background.fill(pygame.Color('#000000'))
         self.draw_board()
-        quit = threading.Thread(target=self.quit)
-        quit.start()
+
+        self.quit = threading.Thread(target=self.quit)
+        self.quit.start()
+    
 
     def draw_square(self, x , y, value):
         # R if value=1, G if value=2, W if value=0, Y if value=3, B if value=4
@@ -203,7 +215,6 @@ class Bfs:
 
     def bfs_search(self):
         self.goalParentId = - 1
-        self.done = False
         self.visited_flag = np.zeros(self.SIZE_X * self.SIZE_Y)
         self.bfs = []
         self.nodes = []
@@ -228,7 +239,9 @@ class Bfs:
                         self.draw_square(self.x_tmp, self.y_tmp, self.charMap[n])
                         time.sleep(0.05)
                     elif (self.charMap[n] == '4'):
+                        self.mutex.acquire()
                         self.done = True
+                        self.mutex.release()
                         self.x_tmp, self.y_tmp = self.index2map(n)
                         distance = max(abs(self.end_x - self.x_tmp), abs(self.end_y - self.y_tmp))  
                         self.node_tmp = Node(self.x_tmp, self.y_tmp, self.goalParentId, self.index, distance)
@@ -251,16 +264,20 @@ class Bfs:
                     self.goalParentId = self.node.parentId
                     if( self.goalParentId == self.map2index(self.start_x, self.start_y)):
                         print("%%%%%%%%%%%%%%%%%")
+                        self.mutex.acquire()
                         self.ok = True
+                        self.mutex.release()
+                        input("Press Enter to close")
+                        pygame.quit()
 
     def quit(self):
-        while True:
+        while not self.ok:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.mutex.acquire()
                     self.ok = True
                     self.done = True
-                    pygame.quit()
-                    break
+                    self.mutex.release()
             time.sleep(0.5)
 
 
@@ -270,4 +287,3 @@ if __name__ == "__main__":
     bfs = Bfs(MAP)
     bfs.bfs_search()
     bfs.path_search()
-    input("Press Enter to close")
