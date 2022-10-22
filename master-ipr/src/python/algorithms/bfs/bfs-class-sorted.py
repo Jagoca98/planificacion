@@ -5,21 +5,21 @@ import time
 import numpy as np
 import math
 import threading
-from sys import exit
+from random import randint as r
 
-FREE = (255, 255, 255)
-OBSTACLE = (255, 179, 15)
-VISITED = (141, 181, 128)
-GOAL = (255, 255, 0)
-START = (0, 0, 255)
-PATH = (75, 74, 103)
+# FREE = (random.randint(0.255), 255, 255)
+# OBSTACLE = (255, 179, 15)
+# VISITED = (141, 181, 128)
+# GOAL = (255, 255, 0)
+# START = (0, 0, 255)
+# PATH = (75, 74, 103)
+FREE = (r(0,255), r(0,255), r(0,255))
+OBSTACLE = (r(0,255), r(0,179), r(0,15))
+VISITED = (r(0,141), r(0,181), r(0,128))
+GOAL = (r(0,255), r(0,255), r(0,0))
+START = (r(0,0), r(0,0), r(0,255))
+PATH = (r(0,75), r(0,74), r(0,103))
 
-"""!@brief Creates a new Hello object.
-
-    This Hello Object is being used to...
-
-    @param name The name of the user.
-    """
 class Node:
     def __init__(self, x, y, myId, parentId, distance):
         self.x = x
@@ -36,6 +36,12 @@ class Node:
 class Bfs:
 
     def __init__(self, MAP=1):
+        """!@brief Creates a new BFS object.
+
+        This Bfs object is being used to setup environment.
+
+        @param MAP The map number in which set the search.
+        """
         self.MAP = MAP
         if (self.MAP < 1 or self.MAP > 11):
             self.MAP = 1
@@ -75,8 +81,15 @@ class Bfs:
         self.quit = threading.Thread(target=self.quit)
         self.quit.start()
     
-
     def draw_square(self, x , y, value):
+        """!@brief Draw a simple square.
+
+        This function draw a simple square in the position (x,y) with the value using pygame.
+
+        @param x The x coordinate of the cell.
+        @param y The y coordinate of the cell.
+        @param value The value of the cell.
+        """
         # R if value=1, G if value=2, W if value=0, Y if value=3, B if value=4
         if value == '0':
             self.color = FREE
@@ -109,20 +122,53 @@ class Bfs:
         pygame.display.update(self.rec_ext)
 
     def draw_board (self):
+        """!@brief Draw the board.
+
+        This function draw the complete board.
+        """
         for i in range(len(self.charMap)):
             self.map_x, self.map_y = self.index2map(i)
             self.draw_square(self.map_x, self.map_y, self.charMap[i])
 
     def index2map(self, index):
+        """!@brief Convert from index to map coordinates.
+
+        This function converts the index position of the charMap cell to the (x,y) coordinates of the map cell.
+
+        @param index The index of the charMap cell.
+        @return (x, y) The coordinates (x, y) of the map cell. 
+        """
         return(index%(self.SIZE_X), math.trunc(index/(self.SIZE_X)))
 
     def map2index(self, x, y):
+        """!@brief Convert from map coordinates to index.
+
+        This function converts the (x,y) coordinates of the map to the index position of the charMap.
+
+        @param x The x coordinate of a map cell.
+        @param y The y coordinate of a map cell.
+        @return index The index of the charMap cell.
+        """
         return(self.SIZE_X * y + x)
 
     def update_value(self, index, value):
+        """!@brief Update the value of a cell.
+
+        This function updates the index cell of a charMap with the value value.
+
+        @param index The index of the charMap cell.
+        @param value The value of the map cell.
+        """
         self.charMap[index] = value;
 
     def setup(self, MAP):
+        """!@brief Setup Start and Goal position
+
+        This function setup the Start and Goal position depending on the MAP input.
+
+        @param MAP The MAP number in which set the search.
+        @return (x_start, y_start, x_end, y_end) The coordinates of the Start and Goal position.
+        """
         if MAP == 1:
             start_x = 3
             start_y = 3
@@ -185,6 +231,13 @@ class Bfs:
         return start_x-1, start_y-1, end_x-1, end_y-1
 
     def nhood4(self, index):
+        """!@brief Search 4 neighbourgs
+
+        Determine 4-connected neighbourhood of an input cell, checking for map edges
+
+        @param index Input cell index
+        @return 4-neighbour cell indexes
+        """
         out = []
         if(index > self.SIZE_X * self.SIZE_Y -1):
             print("Evaluating nhood out of the map")
@@ -200,6 +253,13 @@ class Bfs:
         return out
 
     def nhood8(self, index):
+        """!@brief Search 8 neighbourgs
+
+        Determine 8-connected neighbourhood of an input cell, checking for map edges
+
+        @param index Input cell index
+        @return 8-neighbour cell indexes
+        """
         out = self.nhood4(index)
         if(index > self.SIZE_X * self.SIZE_Y - 1):
             return out
@@ -214,6 +274,12 @@ class Bfs:
         return out
 
     def bfs_search(self):
+        """!@brief Bfs-sorted algorithm
+
+        Starts the Bfs search with an sorted-by-distance heuristic. The distance is calculated as Chebyseb distance.
+
+        @return nodes Visited nodes during the exploration.
+        """
         self.goalParentId = - 1
         self.visited_flag = np.zeros(self.SIZE_X * self.SIZE_Y)
         self.bfs = []
@@ -248,10 +314,15 @@ class Bfs:
                         self.bfs.append(self.node_tmp)
                         self.nodes.append(self.node_tmp)
                         print("Golaso mi nino oleoleole")
-            self.bfs = sorted(self.bfs, key=lambda x: x.distance)
+            self.bfs = sorted(self.bfs, key=lambda x: x.distance) ## Sort bfs nodes by distance to the goal
         return self.nodes
 
     def path_search(self):
+        """!@brief path search function
+
+        This function looks for the path from the goal to the start.
+
+        """
         print("%%%%%%%%%%%%%%%%%%%")
         while not self.ok:
             for self.node in self.nodes:
@@ -271,6 +342,10 @@ class Bfs:
                         pygame.quit()
 
     def quit(self):
+        """!@brief Quit the game.
+
+        This function let to close pygame whenever.
+        """        
         while not self.ok:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -279,8 +354,6 @@ class Bfs:
                     self.done = True
                     self.mutex.release()
             time.sleep(0.5)
-
-
 
 if __name__ == "__main__":
     MAP = int(input('Mapa (1 - 11): '))
