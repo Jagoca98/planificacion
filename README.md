@@ -17,7 +17,7 @@ This project contains a series of files that incorporate a bfs-based graph searc
 
 In Ubuntu:
 
-- Unzip the project
+- `unzip` the project
 
 ```
 $ unzip planificacion.zip -d ~/
@@ -25,13 +25,13 @@ $ unzip planificacion.zip -d ~/
 
 or
 
-- git clone the project
+- `git clone` the project
 
 ```
 $ git -C ~ clone https://github.com/Jagoca98/planificacion.git
 ```
 
-- cd to the src directory
+- `cd` to the `src` directory
 
 ```
 $ cd ~/planificacion/master-ipr/src/python/algorithms/bfs
