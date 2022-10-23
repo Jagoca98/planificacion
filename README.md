@@ -20,13 +20,21 @@ In Ubuntu:
 - Unzip the proyect
 
 ```
-$ cd master-ipr/src/python/algorithms/bfs
+$ unzip planificacion.zip -d ~/
+```
+
+or
+
+- git clone the proyect
+
+```
+$ git -C ~ clone https://github.com/Jagoca98/planificacion.git
 ```
 
 - cd to the master-ipr/src/python/algorithms/bfs
 
 ```
-$ cd master-ipr/src/python/algorithms/bfs
+$ cd ~/planificacion/master-ipr/src/python/algorithms/bfs
 ```
 
 - Execute the bfs-class-sorted.py
@@ -34,5 +42,7 @@ $ cd master-ipr/src/python/algorithms/bfs
 ```
 $ python3 bfs-class-sorted.py
 ```
+
+- Select the map and enjoy!
 
 ----------  
