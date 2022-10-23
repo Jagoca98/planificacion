@@ -2,10 +2,10 @@
 
 ## This is a list of the changes in the Python project.
 - Relative paths are used for files
-- BFS implemented less sequentially 
+- BFS implemented less sequentially
+- BFS modified to work with the 8 neighbors 
 - Added PyGame graphical interface
 - Predefined map selector
-- BFS modified to work with the 8 neighbors
 - BFS modified to sort nodes based on distance to the goal
 
 ### Description
@@ -17,7 +17,7 @@ This project contains a series of files that incorporate a bfs-based graph searc
 
 In Ubuntu:
 
-- Unzip the proyect
+- Unzip the project
 
 ```
 $ unzip planificacion.zip -d ~/
@@ -25,13 +25,13 @@ $ unzip planificacion.zip -d ~/
 
 or
 
-- git clone the proyect
+- git clone the project
 
 ```
 $ git -C ~ clone https://github.com/Jagoca98/planificacion.git
 ```
 
-- cd to the master-ipr/src/python/algorithms/bfs
+- cd to the src directory
 
 ```
 $ cd ~/planificacion/master-ipr/src/python/algorithms/bfs
